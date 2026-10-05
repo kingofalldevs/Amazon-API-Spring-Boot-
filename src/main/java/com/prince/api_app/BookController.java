@@ -1,6 +1,7 @@
 package com.prince.api_app;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,6 +23,16 @@ public class BookController {
         @GetMapping
         public List<Book> getBooks(){
                 return books;
+        }
+
+        @GetMapping("/{id}")
+        public Book getBooks(@PathVariable int id){
+                for (Book b : books){
+                        if (b.getId() == id ){
+                                return b;
+                        }
+                }
+                return null;
         }
 
 
