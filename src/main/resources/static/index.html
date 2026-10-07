@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head><title>Books</title></head>
+<link rel="stylesheet" href="/css/style.css">
+<body>
+<h1>Books</h1>
+<ul id="list"></ul>
+
+<script>
+    fetch("/books")
+        .then(res => res.json())
+        .then(books => {
+            const list = document.getElementById("list");
+            books.forEach(b => {
+                const li = document.createElement("li");
+                li.textContent = `${b.title} by ${b.author} - $${b.price}`;
+                list.appendChild(li);
+            });
+        });
+</script>
+</body>
+</html>

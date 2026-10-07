@@ -1,0 +1,56 @@
+body {
+    font-family: Georgia, serif;
+    background: #f3f5f2;
+    color: #1d2b27;
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+h1 {
+    font-size: 2.2rem;
+    margin-bottom: 24px;
+}
+
+/* Card layout (for the JavaScript version) */
+#list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 16px;
+}
+
+.book {
+    background: #fff;
+    border: 1px solid #d5ddd8;
+    border-left: 6px solid #1f5c4d;
+    border-radius: 4px;
+    padding: 16px;
+}
+
+.book h2 { margin: 0 0 4px; font-size: 1.15rem; }
+.book .author { margin: 0; color: #5f6f69; font-style: italic; }
+.book .price { margin: 14px 0 0; font-weight: bold; color: #1f5c4d; }
+
+/* Table (for the Thymeleaf version) */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+}
+
+th, td {
+    padding: 12px 14px;
+    text-align: left;
+    border-bottom: 1px solid #d5ddd8;
+}
+
+th {
+    background: #1f5c4d;
+    color: #fff;
+}
+
+tr:hover td {
+    background: #eef3f0;
+}
