@@ -1,12 +1,21 @@
 package com.prince.api_app;
 
+import jakarta.persistence.*;
+
+
+@Entity
 public class Book {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String title;
     private String author;
     private double price;
 
+    public Book(){};
+
     public Book(int id, String title, String author, double price){
+
         this.id = id;
         this.title = title;
         this.author = author;
