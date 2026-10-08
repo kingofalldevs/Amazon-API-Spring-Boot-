@@ -73,5 +73,16 @@ public class BookController {
                 return expensive;
         }
 
+        @GetMapping("/author/{name}")
+        public List<Book> getByAuthor(@PathVariable String name){
+                List<Book> result = new ArrayList<>();
+                for (Book b : books){
+                        if (b.getAuthor().equalsIgnoreCase(name)){
+                                result.add(b);
+                        }
+                }
+                return result;
+        }
+
 
 }
