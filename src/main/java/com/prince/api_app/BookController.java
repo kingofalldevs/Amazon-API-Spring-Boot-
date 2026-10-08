@@ -77,7 +77,7 @@ public class BookController {
         public List<Book> getByAuthor(@PathVariable String name){
                 List<Book> result = new ArrayList<>();
                 for (Book b : books){
-                        if (b.getAuthor().equalsIgnoreCase(name)){
+                        if (b.getAuthor().toLowerCase().contains(name.toLowerCase())){
                                 result.add(b);
                         }
                 }
