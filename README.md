@@ -1,6 +1,6 @@
 # Amazon Books API
 
-My first Spring Boot project: a REST API for a book collection, backed by PostgreSQL, with an AI chat endpoint that can search and add books by calling Java tools.
+My first Spring Boot project: a REST API for a book collection, backed by PostgreSQL, with AI tool calling capabilities and a chat endpoint that can search and add books by calling Java tools.
 
 I built this as an introduction to Spring Boot. It covers REST controllers, Spring Data JPA, connecting an API to a real database, and letting an LLM use the API through tool calling.
 
@@ -34,8 +34,15 @@ curl -X POST http://localhost:8080/books \
   -d '{"title":"Night Market","author":"Ama Boateng","price":21.50}'
 ```
 
-### AI chat
+### AI TOOLS
 
+| Method | Tool | Endpoint          | Description                  |
+|--------|---|-------------------|------------------------------|
+| GET    | findBooksByAuthor  | `/books`          | List all books               |
+| GET    | getCheapestBook  | `/books/cheapest` | Get the cheapest book        |
+| POST   | addBook | `/books`          | Add book to the the database |
+
+### AI chat
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/chat?message=...` | Ask a question in plain language. The model decides which tool to call. |
