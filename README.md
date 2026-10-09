@@ -61,7 +61,8 @@ curl -G http://localhost:8080/chat --data-urlencode "message=Add a book called N
 
 ```
 curl /chat -> ChatController -> DeepSeek -> BookTools -> BookRepository -> PostgreSQL
-                                    ^                                          |
+                                    ^                                          ^
+                                    |                                          |
                                     +------------- result ---------------------+
 ```
 
