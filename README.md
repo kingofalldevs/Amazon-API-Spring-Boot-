@@ -1,4 +1,4 @@
-# Books API
+# Amazon Books API
 
 My first Spring Boot project: a small REST API for a book collection, backed by PostgreSQL.
 
