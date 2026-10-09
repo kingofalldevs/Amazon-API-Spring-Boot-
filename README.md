@@ -36,11 +36,14 @@ curl -X POST http://localhost:8080/books \
 
 ### AI TOOLS
 
-| Method | Tool | Equivalent Endpoint    | Description              |
-|--------|---|------------------------|--------------------------|
-| GET    | findBooksByAuthor  | `/books/author/{name}` | find book by author name |
-| GET    | getCheapestBook  | `/books/cheapest`      | Get cheapest book        |
-| POST   | addBook | `/books`               | Add book to the database |
+| Method | Tool | Equivalent Endpoint     | Description              |
+|--------|---|-------------------------|--------------------------|
+| GET    | findBooksByAuthor  | `/books/author/{name}`  | find book by author name |
+| GET    | getCheapestBook  | `/books/cheapest`       | Get cheapest book        |
+|GET|getTotal`/books/mostexpensive`| Get most expensive book |
+|GET|getTotal| `books/total`           | Get total of books       |
+| POST   | addBook | `/books`                | Add book to the database |
+
 
 ### AI chat
 | Method | Endpoint | Description |
