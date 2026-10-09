@@ -1,4 +1,6 @@
 # Amazon Books API
+<img width="1196" height="677" alt="WhatsApp Image 2026-10-09 at 9 29 56 AM" src="https://github.com/user-attachments/assets/40eef2f1-bb72-48c6-ab06-677664fb0920" />
+# Amazon Books API
 
 My first Spring Boot project: a REST API for a book collection, backed by PostgreSQL, with AI tool calling capabilities and a chat endpoint that can search and add books by calling Java tools.
 
