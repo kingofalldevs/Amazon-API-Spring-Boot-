@@ -26,9 +26,23 @@ public class BookTools {
         return bookRepository.findFirstByOrderByPriceAsc();
     }
 
+    @Tool(description = "Get the most Expensive book in the database")
+    public Book getMostExpensive() {
+        System.out.println("TOOL CALLED: getMostExpensive()");
+        return bookRepository.findFirstByOrderByPriceDesc();
+    }
+
+
     @Tool(description = "Add one new book to the database")
     public Book addBook(String title, String author, double price) {
         System.out.println("TOOL CALLED: addBook(" + title + ")");
         return bookRepository.save(new Book(null, title, author, price));
     }
+
+    @Tool(description = "Get the total of books ")
+    public int getTotal(){
+        System.out.println("TOOL CALLED: getTotal()");
+        return (int) bookRepository.count();
+    }
+
 }

@@ -27,7 +27,6 @@ public class BookController {
 
         @GetMapping("/total")
         public int getTotal(){
-
                 return (int) bookRepository.count();
         }
 
