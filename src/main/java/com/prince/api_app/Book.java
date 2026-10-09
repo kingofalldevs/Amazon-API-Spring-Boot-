@@ -7,14 +7,14 @@ import jakarta.persistence.*;
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     private String title;
     private String author;
     private double price;
 
     public Book(){};
 
-    public Book(int id, String title, String author, double price){
+    public Book(Integer id, String title, String author, double price){
 
         this.id = id;
         this.title = title;
@@ -22,7 +22,7 @@ public class Book {
         this.price = price;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -38,7 +38,7 @@ public class Book {
         return price;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
