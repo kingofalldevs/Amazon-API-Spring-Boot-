@@ -40,9 +40,22 @@ public class BookTools {
     }
 
     @Tool(description = "Get the total of books ")
-    public int getTotal(){
+    public int getTotal() {
         System.out.println("TOOL CALLED: getTotal()");
         return (int) bookRepository.count();
     }
+
+    @Tool(description = "Get a list of all authors in Ascending order of book price")
+    public List<Book> getAscending(){
+        System.out.println("TOOL CALLED: getAscending");
+        return
+    }
+
+    @Tool(description = "Get a list of all authors in descending order of book price")
+    public List<Book> getAscending(){
+        System.out.println("TOOL CALLED: getAscending");
+        return
+    }
+
 
 }

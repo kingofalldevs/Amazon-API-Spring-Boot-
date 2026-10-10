@@ -8,5 +8,6 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
   List<Book> findByAuthorContainingIgnoreCase(String author);
   Book findFirstByOrderByPriceAsc();
   Book findFirstByOrderByPriceDesc();
+ ;
 
 }
