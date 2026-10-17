@@ -45,17 +45,15 @@ public class BookTools {
         return (int) bookRepository.count();
     }
 
-    @Tool(description = "Get a list of all authors in Ascending order of book price")
-    public List<Book> getAscending(){
-        System.out.println("TOOL CALLED: getAscending");
-        return
+    @Tool(description = "add more than one book to the database")
+    public List<Book> addBulk(List<Book> books) {
+        System.out.println("TOOL CALLED: addBulk");
+        return bookRepository.saveAll(books);
     }
 
-    @Tool(description = "Get a list of all authors in descending order of book price")
-    public List<Book> getAscending(){
-        System.out.println("TOOL CALLED: getAscending");
-        return
-    }
+
+
+
 
 
 }

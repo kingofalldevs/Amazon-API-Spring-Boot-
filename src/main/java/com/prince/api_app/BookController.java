@@ -66,6 +66,11 @@ public class BookController {
                 return bookRepository.save(book);
         }
 
+         @PostMapping("/bulk")
+        public List<Book> addBulkBooks(@RequestBody List<Book> books){
+                return bookRepository.saveAll(books);
+        }
+
 
 
 
