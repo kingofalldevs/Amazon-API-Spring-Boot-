@@ -77,19 +77,18 @@ public class BookController {
         }
 
         @PutMapping("/{id}")
-        public Book updateBook(@PathVariable int id, @RequestParam Book book){
+        public Book updateBook(@PathVariable int id, @RequestBody Book book){
                 Book existingBook = bookRepository.findById(id).orElse(null);
-                if(existingBook != null){
-                        existingBook.setAuthor(book.getAuthor());
+                if (existingBook != null) {
                         existingBook.setTitle(book.getTitle());
+                        existingBook.setAuthor(book.getAuthor());
                         existingBook.setPrice(book.getPrice());
-                        return  bookRepository.save(existingBook);
-                }else {
-                        return null;
+                        return bookRepository.save(existingBook);
+                } else {
+                        return null;            
                 }
 
         }
-
 
 
 

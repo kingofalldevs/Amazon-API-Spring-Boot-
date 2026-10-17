@@ -73,11 +73,10 @@ public class BookTools {
             existingBook.setTitle(book.getTitle());
             existingBook.setAuthor(book.getAuthor());
             existingBook.setPrice(book.getPrice());
-            bookRepository.save(existingBook);
+            return bookRepository.save(existingBook);
         }else {
             return null;
         }
-        return null;
 
     }
 
