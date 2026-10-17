@@ -71,6 +71,11 @@ public class BookController {
                 return bookRepository.saveAll(books);
         }
 
+        @GetMapping("/priceRange")
+        public List<Book> getByPriceRange(@RequestParam double minPrice, @RequestParam double maxPrice){
+                return bookRepository.findByPriceBetween(minPrice, maxPrice);
+        }
+
 
 
 

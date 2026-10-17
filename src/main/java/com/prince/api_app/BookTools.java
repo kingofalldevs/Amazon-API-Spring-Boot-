@@ -53,7 +53,17 @@ public class BookTools {
         return bookRepository.saveAll(books);
     }
 
+    @Tool(description = "Get book by id from the database")
+    public Book getBookById(int id) {
+        System.out.println("TOOL CALLED: getBookById(" + id + ")");
+        return bookRepository.findById(id).orElse(null);
+    }
 
+    @Tool(description = "Get books from the database within a price range")
+    public List<Book> bookByPriceRange(double minPrice, double maxPrice) {
+        System.out.println("TOOL CALLED: bookByPriceRange(" + minPrice + ", " + maxPrice + ")");
+        return bookRepository.findByPriceBetween(minPrice, maxPrice);
+    }
 
 
 
