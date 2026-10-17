@@ -76,6 +76,20 @@ public class BookController {
                 return bookRepository.findByPriceBetween(minPrice, maxPrice);
         }
 
+        @PutMapping("/{id}")
+        public Book updateBook(@PathVariable int id, @RequestParam Book book){
+                Book existingBook = bookRepository.findById(id).orElse(null);
+                if(existingBook != null){
+                        existingBook.setAuthor(book.getAuthor());
+                        existingBook.setTitle(book.getTitle());
+                        existingBook.setPrice(book.getPrice());
+                        return  bookRepository.save(existingBook);
+                }else {
+                        return null;
+                }
+
+        }
+
 
 
 

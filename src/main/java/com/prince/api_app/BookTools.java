@@ -65,6 +65,21 @@ public class BookTools {
         return bookRepository.findByPriceBetween(minPrice, maxPrice);
     }
 
+    @Tool(description = "Use this tool to update content of a book in the database by id")
+    public Book updateBook(int id , Book book){
+        System.out.println("TOOL CALLED: updateBook("+id+")");
+        Book existingBook = bookRepository.findById(id).orElse(null);
+        if(existingBook != null){
+            existingBook.setTitle(book.getTitle());
+            existingBook.setAuthor(book.getAuthor());
+            existingBook.setPrice(book.getPrice());
+            bookRepository.save(existingBook);
+        }else {
+            return null;
+        }
+        return null;
+
+    }
 
 
 
