@@ -2,7 +2,7 @@ package com.prince.api_app;
 
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.stereotype.Component;
-
+import org.springframework.ai.tool.annotation.ToolParam;
 import java.util.List;
 
 @Component
@@ -46,8 +46,10 @@ public class BookTools {
     }
 
     @Tool(description = "add more than one book to the database")
-    public List<Book> addBulk(List<Book> books) {
-        System.out.println("TOOL CALLED: addBulk");
+    public List<Book> addBulk(
+        @ToolParam(description = "Books to save; each needs a title, author, and price. Omit id.")
+        List<Book> books) {
+        System.out.println("TOOL CALLED: addBulk(" + books.size() + ")");
         return bookRepository.saveAll(books);
     }
 
