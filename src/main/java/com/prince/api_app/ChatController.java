@@ -15,9 +15,9 @@ public class ChatController {
     }
 
     @PostMapping("/chat")
-    public String chat(@RequestBody String message) {
+    public String chat(@RequestBody ChatRequest request) {
         return chatClient.prompt()
-                .user(message)
+                .user(request.message())
                 .tools(bookTools)
                 .call()
                 .content();
