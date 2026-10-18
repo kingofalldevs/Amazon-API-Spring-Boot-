@@ -35,7 +35,7 @@ public class BookTools {
     public Book getMostExpensive() {
         System.out.println("TOOL CALLED: getMostExpensive()");
         if (bookRepository.count() == 0) {
-            return "No books found";
+            return book;
         }
         return bookRepository.findFirstByOrderByPriceDesc();
     }

@@ -1,9 +1,7 @@
 package com.prince.api_app;
 
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ChatController {
@@ -16,8 +14,8 @@ public class ChatController {
         this.bookTools = bookTools;
     }
 
-    @GetMapping("/chat")
-    public String chat(@RequestParam String message) {
+    @PostMapping("/chat")
+    public String chat(@RequestBody String message) {
         return chatClient.prompt()
                 .user(message)
                 .tools(bookTools)
