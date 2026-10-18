@@ -16,6 +16,11 @@ public class BookTools {
         this.bookRepository = bookRepository;
     }
 
+    @Tool(description = "List all books with their ids, titles, authors, and prices")
+    public List<Book> getAllBooks() {
+    return bookRepository.findAll();
+}
+
     @Tool(description = "Find books whose author name contains the given text")
     public List<Book> findBooksByAuthor(String author) {
         System.out.println("TOOL CALLED: findBooksByAuthor(" + author + ")");
