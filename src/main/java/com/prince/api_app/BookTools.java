@@ -22,22 +22,24 @@ public class BookTools {
         return bookRepository.findByAuthorContainingIgnoreCase(author);
     }
 
-    @Tool(description = "Get the cheapest book in the database")
-    public Book getCheapestBook() {
-        if (bookRepository.count() == 0) {
-            return "No books found";
-        }
+    @Tool(description = "Get the most Cheapest book in the database")
+    public BookToolResult getCheapestBook() {
         System.out.println("TOOL CALLED: getCheapestBook()");
-        return bookRepository.findFirstByOrderByPriceAsc();
+        Book book = bookRepository.findFirstByOrderByPriceAsc();
+        if (book == null) {
+            return new BookToolResult(null, "No Book found.");
+        }
+        return new BookToolResult(book,"Book found.");
     }
 
     @Tool(description = "Get the most Expensive book in the database")
-    public Book getMostExpensive() {
-        System.out.println("TOOL CALLED: getMostExpensive()");
-        if (bookRepository.count() == 0) {
-            return book;
+    public BookToolResult getMostExpensive() {
+        System.out.println("TOOL CALLED: getMostExpensiveBook()");
+        Book book = bookRepository.findFirstByOrderByPriceDesc();
+        if (book == null) {
+            return new BookToolResult(null, "No Book found.");
         }
-        return bookRepository.findFirstByOrderByPriceDesc();
+        return new BookToolResult(book,"Book found.");
     }
 
 
