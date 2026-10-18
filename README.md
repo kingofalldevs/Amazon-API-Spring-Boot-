@@ -68,16 +68,26 @@ The PUT handler replaces all three fields; omitted fields are overwritten with `
 
 The `getBookById` and `updateBook` tools throw `IllegalArgumentException` when the book id is missing. Tool calls are not HTTP requests, so these exceptions do not represent HTTP status codes.
 
+`getCheapestBook` and `getMostExpensive` return a `BookToolResult` containing a `book` and a `message`. When no matching book exists, `book` is `null` and the message says no book was found.
+
 
 ### AI chat
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/chat?message=...` | Ask a question in plain language. The model decides which tool to call. |
+| POST | `/chat` | Send a plain-text question in the request body. The model decides which tool to call. |
 
 ```bash
-curl -G http://localhost:8080/chat --data-urlencode "message=Who wrote the cheapest book?"
-curl -G http://localhost:8080/chat --data-urlencode "message=Add a book called Night Market by Ama Boateng priced at 21.50"
-curl -G http://localhost:8080/chat --data-urlencode "message=Update book 1: change the title to Night Market and set the price to 19.50"
+curl -X POST http://localhost:8080/chat \
+  -H "Content-Type: text/plain" \
+  --data "Who wrote the cheapest book?"
+
+curl -X POST http://localhost:8080/chat \
+  -H "Content-Type: text/plain" \
+  --data "Add a book called Night Market by Ama Boateng priced at 21.50"
+
+curl -X POST http://localhost:8080/chat \
+  -H "Content-Type: text/plain" \
+  --data "Update book 1: change the title to Night Market and set the price to 19.50"
 ```
 
 ## How the AI part works
@@ -102,6 +112,7 @@ src/main/java/com/prince/api_app/
 ├── BookRepository.java      # Spring Data JPA repository
 ├── BookController.java      # REST endpoints under /books
 ├── BookTools.java           # @Tool methods the AI can call
+├── BookToolResult.java      # result returned by the cheapest/most expensive tools
 ├── ChatController.java      # /chat endpoint
 └── orderController.java     # placeholder /orders endpoint
 src/main/resources/
