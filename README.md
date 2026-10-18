@@ -26,6 +26,7 @@ I built this as an introduction to Spring Boot. It covers REST controllers, Spri
 | GET | `/books/cheapest` | The book with the lowest price; returns 404 when no books exist |
 | GET | `/books/mostexpensive` | The book with the highest price; returns 404 when no books exist |
 | GET | `/books/author/{name}` | Search by author (partial, case-insensitive) |
+| GET | `/books/title/{title}` | Search by title (partial, case-insensitive) |
 | GET | `/books/priceRange?minPrice={min}&maxPrice={max}` | Find books within an inclusive price range |
 | POST | `/books` | Add a new book (the database assigns the id) |
 | POST | `/books/bulk` | Add multiple books |
@@ -39,6 +40,7 @@ I built this as an introduction to Spring Boot. It covers REST controllers, Spri
 
 ```bash
 curl http://localhost:8080/books/author/pappy
+curl http://localhost:8080/books/title/dune
 
 curl -X POST http://localhost:8080/books \
   -H "Content-Type: application/json" \
@@ -56,7 +58,9 @@ The PUT handler replaces all three fields; omitted fields are overwritten with `
 
 | Tool | Related REST endpoint | Description |
 |------|-----------------------|-------------|
+| `getAllBooks` | `GET /books` | List all books with ids, titles, authors, and prices |
 | `findBooksByAuthor` | `/books/author/{name}` | Find books by partial, case-insensitive author name |
+| `findBooksByTitle` | `GET /books/title/{title}` | Find books by partial, case-insensitive title |
 | `getCheapestBook` | `/books/cheapest` | Get the cheapest book |
 | `getMostExpensive` | `/books/mostexpensive` | Get the most expensive book |
 | `getTotal` | `/books/total` | Count the books |
@@ -74,25 +78,27 @@ The `getBookById` and `updateBook` tools throw `IllegalArgumentException` when t
 ### AI chat
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | `/chat` | Send a plain-text question in the request body. The model decides which tool to call. |
+| POST | `/chat` | Send a JSON `ChatRequest` with a conversation id and message. The model decides which tool to call. |
 
 ```bash
 curl -X POST http://localhost:8080/chat \
-  -H "Content-Type: text/plain" \
-  --data "Who wrote the cheapest book?"
+  -H "Content-Type: application/json" \
+  -d '{"conversationId":"demo-1","message":"Who wrote the cheapest book?"}'
 
 curl -X POST http://localhost:8080/chat \
-  -H "Content-Type: text/plain" \
-  --data "Add a book called Night Market by Ama Boateng priced at 21.50"
+  -H "Content-Type: application/json" \
+  -d '{"conversationId":"demo-1","message":"What was the title of that book?"}'
 
 curl -X POST http://localhost:8080/chat \
-  -H "Content-Type: text/plain" \
-  --data "Update book 1: change the title to Night Market and set the price to 19.50"
+  -H "Content-Type: application/json" \
+  -d '{"conversationId":"demo-2","message":"Add a book called Night Market by Ama Boateng priced at 21.50"}'
 ```
+
+Send the same `conversationId` for each turn in one conversation; use a different id for a separate conversation. Chat memory currently keeps a window of 20 messages in memory, so it is lost when the application restarts and is not shared across application instances.
 
 ## How the AI part works
 
-`BookTools` holds ordinary Java methods marked with `@Tool` and a short description. The model reads those descriptions, decides when a method is useful, and Spring AI runs it against Postgres.
+`BookTools` holds ordinary Java methods marked with `@Tool` and a short description. The model reads those descriptions, decides when a method is useful, and Spring AI runs it against Postgres. `ChatController` uses Spring AI chat memory to include recent messages for the request's `conversationId`.
 
 ```
 curl /chat -> ChatController -> DeepSeek -> BookTools -> BookRepository -> PostgreSQL
@@ -114,6 +120,7 @@ src/main/java/com/prince/api_app/
 ├── BookTools.java           # @Tool methods the AI can call
 ├── BookToolResult.java      # result returned by the cheapest/most expensive tools
 ├── ChatController.java      # /chat endpoint
+├── ChatRequest.java         # /chat request body: conversationId and message
 └── orderController.java     # placeholder /orders endpoint
 src/main/resources/
 ├── application.properties   # database and AI configuration
