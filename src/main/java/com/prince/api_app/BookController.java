@@ -1,6 +1,8 @@
 package com.prince.api_app;
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +24,7 @@ public class BookController {
 
         @GetMapping("/{id}")
         public Book getBooks(@PathVariable int id){
-                return bookRepository.findById(id).orElse(null);
+                return bookRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found"));
         }
 
         @GetMapping("/total")
@@ -33,6 +35,9 @@ public class BookController {
         @GetMapping("/cheapest")
         public Book getCheapest(){
                 List<Book> books = bookRepository.findAll();
+                if (books.isEmpty()) {
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+                }
                 Book cheapest = books.get(0);
                 for (Book b : books){
                         if (b.getPrice() < cheapest.getPrice() ) {
@@ -46,6 +51,9 @@ public class BookController {
         @GetMapping("/mostexpensive")
         public Book getMostExpensive(){
                 List<Book> books = bookRepository.findAll();
+                if (books.isEmpty()) {
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+                }
                 Book expensive = books.get(0);
                 for (Book b : books){
                         if (b.getPrice() > expensive.getPrice() ) {
@@ -78,16 +86,13 @@ public class BookController {
 
         @PutMapping("/{id}")
         public Book updateBook(@PathVariable int id, @RequestBody Book book){
-                Book existingBook = bookRepository.findById(id).orElse(null);
-                if (existingBook != null) {
-                        existingBook.setTitle(book.getTitle());
-                        existingBook.setAuthor(book.getAuthor());
-                        existingBook.setPrice(book.getPrice());
-                        return bookRepository.save(existingBook);
-                } else {
-                        return null;            
-                }
-
+                Book existingBook = bookRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+            
+                existingBook.setTitle(book.getTitle());
+                existingBook.setAuthor(book.getAuthor());
+                existingBook.setPrice(book.getPrice());
+                return bookRepository.save(existingBook);
+                
         }
 
 

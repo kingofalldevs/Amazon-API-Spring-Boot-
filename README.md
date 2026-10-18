@@ -1,7 +1,7 @@
 # Amazon Books API
 <img width="1196" height="677" alt="WhatsApp Image 2026-10-09 at 9 29 56 AM" src="https://github.com/user-attachments/assets/40eef2f1-bb72-48c6-ab06-677664fb0920" />
 
-My first Spring Boot project: a REST API for a book collection, backed by PostgreSQL, with AI tool calling capabilities and a chat endpoint that can query and update books by calling Java tools.
+My first Spring Boot project: a REST API for a book collection, backed by PostgreSQL, with AI tool calling capabilities and a chat endpoint that can search, retrieve, add, and update books by calling Java tools.
 
 I built this as an introduction to Spring Boot. It covers REST controllers, Spring Data JPA, connecting an API to a real database, and letting an LLM use the API through tool calling.
 
@@ -21,15 +21,15 @@ I built this as an introduction to Spring Boot. It covers REST controllers, Spri
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/books` | List all books |
-| GET | `/books/{id}` | Get one book by id |
+| GET | `/books/{id}` | Get one book by id; returns 404 when it does not exist |
 | GET | `/books/total` | Count the books |
-| GET | `/books/cheapest` | The book with the lowest price |
-| GET | `/books/mostexpensive` | The book with the highest price |
+| GET | `/books/cheapest` | The book with the lowest price; returns 404 when no books exist |
+| GET | `/books/mostexpensive` | The book with the highest price; returns 404 when no books exist |
 | GET | `/books/author/{name}` | Search by author (partial, case-insensitive) |
 | GET | `/books/priceRange?minPrice={min}&maxPrice={max}` | Find books within an inclusive price range |
 | POST | `/books` | Add a new book (the database assigns the id) |
 | POST | `/books/bulk` | Add multiple books |
-| PUT | `/books/{id}` | Replace a book's title, author, and price when the id exists |
+| PUT | `/books/{id}` | Replace a book's title, author, and price; returns 404 when the id does not exist |
 
 ### Other
 
@@ -50,7 +50,7 @@ curl -X PUT http://localhost:8080/books/1 \
   -d '{"title":"Updated title","author":"Ama Boateng","price":19.50}'
 ```
 
-The PUT handler replaces all three fields; omitted fields are overwritten with `null` or `0`. If the id does not exist, it returns no book rather than an explicit 404 response.
+The PUT handler replaces all three fields; omitted fields are overwritten with `null` or `0`. If the id does not exist, it returns HTTP 404.
 
 ### AI tools
 
@@ -66,6 +66,8 @@ The PUT handler replaces all three fields; omitted fields are overwritten with `
 | `addBulk` | `POST /books/bulk` | Add multiple books |
 | `updateBook` | `PUT /books/{id}` | Update a book by id |
 
+The `getBookById` and `updateBook` tools throw `IllegalArgumentException` when the book id is missing. Tool calls are not HTTP requests, so these exceptions do not represent HTTP status codes.
+
 
 ### AI chat
 | Method | Endpoint | Description |
@@ -75,6 +77,7 @@ The PUT handler replaces all three fields; omitted fields are overwritten with `
 ```bash
 curl -G http://localhost:8080/chat --data-urlencode "message=Who wrote the cheapest book?"
 curl -G http://localhost:8080/chat --data-urlencode "message=Add a book called Night Market by Ama Boateng priced at 21.50"
+curl -G http://localhost:8080/chat --data-urlencode "message=Update book 1: change the title to Night Market and set the price to 19.50"
 ```
 
 ## How the AI part works

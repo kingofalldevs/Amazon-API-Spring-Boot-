@@ -4,6 +4,8 @@ import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.stereotype.Component;
 import org.springframework.ai.tool.annotation.ToolParam;
 import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 @Component
 public class BookTools {
@@ -22,6 +24,9 @@ public class BookTools {
 
     @Tool(description = "Get the cheapest book in the database")
     public Book getCheapestBook() {
+        if (bookRepository.count() == 0) {
+            return "No books found";
+        }
         System.out.println("TOOL CALLED: getCheapestBook()");
         return bookRepository.findFirstByOrderByPriceAsc();
     }
@@ -29,6 +34,9 @@ public class BookTools {
     @Tool(description = "Get the most Expensive book in the database")
     public Book getMostExpensive() {
         System.out.println("TOOL CALLED: getMostExpensive()");
+        if (bookRepository.count() == 0) {
+            return "No books found";
+        }
         return bookRepository.findFirstByOrderByPriceDesc();
     }
 
@@ -56,7 +64,7 @@ public class BookTools {
     @Tool(description = "Get book by id from the database")
     public Book getBookById(int id) {
         System.out.println("TOOL CALLED: getBookById(" + id + ")");
-        return bookRepository.findById(id).orElse(null);
+        return bookRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Book not found"));
     }
 
     @Tool(description = "Get books from the database within a price range")
@@ -68,15 +76,13 @@ public class BookTools {
     @Tool(description = "Use this tool to update content of a book in the database by id")
     public Book updateBook(int id , Book book){
         System.out.println("TOOL CALLED: updateBook("+id+")");
-        Book existingBook = bookRepository.findById(id).orElse(null);
-        if(existingBook != null){
-            existingBook.setTitle(book.getTitle());
-            existingBook.setAuthor(book.getAuthor());
-            existingBook.setPrice(book.getPrice());
-            return bookRepository.save(existingBook);
-        }else {
-            return null;
-        }
+        Book existingBook = bookRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Book not found"));
+      
+        existingBook.setTitle(book.getTitle());
+        existingBook.setAuthor(book.getAuthor());
+        existingBook.setPrice(book.getPrice());
+        return bookRepository.save(existingBook);
+        
 
     }
 
