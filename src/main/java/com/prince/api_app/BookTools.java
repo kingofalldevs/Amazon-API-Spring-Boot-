@@ -22,12 +22,12 @@ public class BookTools {
         return bookRepository.findByAuthorContainingIgnoreCase(author);
     }
 
-    @Tool(description = "Get the most Cheapest book in the database")
+    @Tool(description = "Get the Cheapest book in the database")
     public BookToolResult getCheapestBook() {
         System.out.println("TOOL CALLED: getCheapestBook()");
         Book book = bookRepository.findFirstByOrderByPriceAsc();
         if (book == null) {
-            return new BookToolResult(null, "No Book found.");
+            return new BookToolResult(null, "No Book found for cheapest.");
         }
         return new BookToolResult(book,"Book found.");
     }
@@ -37,7 +37,7 @@ public class BookTools {
         System.out.println("TOOL CALLED: getMostExpensiveBook()");
         Book book = bookRepository.findFirstByOrderByPriceDesc();
         if (book == null) {
-            return new BookToolResult(null, "No Book found.");
+            return new BookToolResult(null, "No Book found for most expensive.");
         }
         return new BookToolResult(book,"Book found.");
     }
