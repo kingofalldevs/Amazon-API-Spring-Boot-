@@ -1,16 +1,16 @@
 # Amazon Books API
 <img width="1196" height="677" alt="WhatsApp Image 2026-10-09 at 9 29 56 AM" src="https://github.com/user-attachments/assets/40eef2f1-bb72-48c6-ab06-677664fb0920" />
-# Amazon Books API
 
-My first Spring Boot project: a REST API for a book collection, backed by PostgreSQL, with AI tool calling capabilities and a chat endpoint that can search and add books by calling Java tools.
+My first Spring Boot project: a REST API for a book collection, backed by PostgreSQL, with AI tool calling capabilities and a chat endpoint that can query and update books by calling Java tools.
 
 I built this as an introduction to Spring Boot. It covers REST controllers, Spring Data JPA, connecting an API to a real database, and letting an LLM use the API through tool calling.
 
 ## Tech stack
 
 - Java
-- Spring Boot 4.1 (Spring Web, Spring Data JPA, DevTools)
-- Spring AI 2.0 with DeepSeek (tool calling)
+- Spring Boot 4.1.1 (Java 17)
+- Spring Web MVC, Spring Data JPA, Thymeleaf, and DevTools
+- Spring AI 2.0.1 with DeepSeek (tool calling)
 - PostgreSQL
 - Maven
 
@@ -26,7 +26,16 @@ I built this as an introduction to Spring Boot. It covers REST controllers, Spri
 | GET | `/books/cheapest` | The book with the lowest price |
 | GET | `/books/mostexpensive` | The book with the highest price |
 | GET | `/books/author/{name}` | Search by author (partial, case-insensitive) |
+| GET | `/books/priceRange?minPrice={min}&maxPrice={max}` | Find books within an inclusive price range |
 | POST | `/books` | Add a new book (the database assigns the id) |
+| POST | `/books/bulk` | Add multiple books |
+| PUT | `/books/{id}` | Replace a book's title, author, and price when the id exists |
+
+### Other
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/orders` | Return a placeholder orders message |
 
 ```bash
 curl http://localhost:8080/books/author/pappy
@@ -34,17 +43,28 @@ curl http://localhost:8080/books/author/pappy
 curl -X POST http://localhost:8080/books \
   -H "Content-Type: application/json" \
   -d '{"title":"Night Market","author":"Ama Boateng","price":21.50}'
+
+# Use an existing book id and provide all three fields.
+curl -X PUT http://localhost:8080/books/1 \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Updated title","author":"Ama Boateng","price":19.50}'
 ```
 
-### AI TOOLS
+The PUT handler replaces all three fields; omitted fields are overwritten with `null` or `0`. If the id does not exist, it returns no book rather than an explicit 404 response.
 
-| Method | Tool | Equivalent Endpoint    | Description              |
-|--------|---|------------------------|--------------------------|
-| GET    | findBooksByAuthor  | `/books/author/{name}` | find book by author name |
-| GET    | getCheapestBook  | `/books/cheapest`      | Get cheapest book        |
-|GET|getTotal| `/books/mostexpensive` | Get most expensive book |
-|GET|getTotal| `books/total`          | Get total of books       |
-| POST   | addBook | `/books`               | Add book to the database |
+### AI tools
+
+| Tool | Related REST endpoint | Description |
+|------|-----------------------|-------------|
+| `findBooksByAuthor` | `/books/author/{name}` | Find books by partial, case-insensitive author name |
+| `getCheapestBook` | `/books/cheapest` | Get the cheapest book |
+| `getMostExpensive` | `/books/mostexpensive` | Get the most expensive book |
+| `getTotal` | `/books/total` | Count the books |
+| `getBookById` | `/books/{id}` | Get a book by id |
+| `bookByPriceRange` | `/books/priceRange` | Find books within a price range |
+| `addBook` | `POST /books` | Add one book |
+| `addBulk` | `POST /books/bulk` | Add multiple books |
+| `updateBook` | `PUT /books/{id}` | Update a book by id |
 
 
 ### AI chat
@@ -68,7 +88,7 @@ curl /chat -> ChatController -> DeepSeek -> BookTools -> BookRepository -> Postg
                                     +------------- result ---------------------+
 ```
 
-Available tools: find books by author, get the cheapest book, add a book. Each call prints `TOOL CALLED: ...` in the console so you can watch the model's choices.
+Each tool call prints `TOOL CALLED: ...` in the console so you can watch the model's choices.
 
 ## Project structure
 
@@ -80,7 +100,14 @@ src/main/java/com/prince/api_app/
 ├── BookController.java      # REST endpoints under /books
 ├── BookTools.java           # @Tool methods the AI can call
 ├── ChatController.java      # /chat endpoint
-└── DataSeeder.java          # inserts starter books when the table is empty
+└── orderController.java     # placeholder /orders endpoint
+src/main/resources/
+├── application.properties   # database and AI configuration
+└── static/
+  ├── layout.html
+  └── css/style.css
+src/test/java/com/prince/api_app/
+└── ApiAppApplicationTests.java # application context test
 ```
 
 ## Running it locally
@@ -122,7 +149,7 @@ spring.ai.deepseek.api-key=YOUR_DEEPSEEK_KEY
 ./mvnw spring-boot:run
 ```
 
-The API is then at `http://localhost:8080`. Hibernate creates the `book` table on first run, and the seeder fills it with starter books.
+The API is then at `http://localhost:8080`. Hibernate creates or updates the `book` table on startup. There is currently no data seeder, so the table starts empty unless you add books through the API or database.
 
 ## What I learned
 
@@ -140,11 +167,12 @@ The API is then at `http://localhost:8080`. Hibernate creates the `book` table o
 
 - [x] GET endpoints backed by PostgreSQL
 - [x] `POST /books`
+- [x] `POST /books/bulk`
+- [x] `PUT /books/{id}`
 - [x] AI chat endpoint with tool calling
-- [ ] `PUT /books/{id}` and `DELETE /books/{id}`
+- [ ] `DELETE /books/{id}`
 - [ ] Validation (`@Valid`) and proper 404 and 400 responses
 - [ ] Move logic into a `BookService`
 - [ ] Prevent duplicate books
-- [ ] Bulk insert tool for the agent
 - [ ] Docker setup
 - [ ] Flutter front end
