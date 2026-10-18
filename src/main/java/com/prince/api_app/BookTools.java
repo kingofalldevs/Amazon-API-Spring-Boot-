@@ -22,6 +22,12 @@ public class BookTools {
         return bookRepository.findByAuthorContainingIgnoreCase(author);
     }
 
+    @Tool(description = "Find books by Title")
+    public List<Book> findBooksByTitle(String title) {
+        System.out.println("TOOL CALLED: findBooksByTitle(" + title + ")");
+        return bookRepository.findByTitleContainingIgnoreCase(title);
+    }
+
     @Tool(description = "Get the Cheapest book in the database")
     public BookToolResult getCheapestBook() {
         System.out.println("TOOL CALLED: getCheapestBook()");

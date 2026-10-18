@@ -9,6 +9,7 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
   Book findFirstByOrderByPriceAsc();
   Book findFirstByOrderByPriceDesc();
   List<Book> findByPriceBetween(double minPrice, double maxPrice);
+  List<Book> findByTitleContainingIgnoreCase(String title);
 
 
 

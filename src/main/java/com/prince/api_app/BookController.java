@@ -27,6 +27,11 @@ public class BookController {
                 return bookRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found"));
         }
 
+        @GetMapping("/title/{title}")
+        public List<Book> getByTitle(@PathVariable String title){
+                return bookRepository.findByTitleContainingIgnoreCase(title);
+        }
+
         @GetMapping("/total")
         public int getTotal(){
                 return (int) bookRepository.count();
