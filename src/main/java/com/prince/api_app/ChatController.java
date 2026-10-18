@@ -2,6 +2,9 @@ package com.prince.api_app;
 
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.chat.memory.MessageWindowChatMemory;
+import org.springframework.context.annotation.Bean;
 
 @RestController
 public class ChatController {
