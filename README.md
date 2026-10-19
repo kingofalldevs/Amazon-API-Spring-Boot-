@@ -1,7 +1,7 @@
 # Amazon Books API
 <img width="1196" height="677" alt="WhatsApp Image 2026-10-09 at 9 29 56 AM" src="https://github.com/user-attachments/assets/40eef2f1-bb72-48c6-ab06-677664fb0920" />
 
-My first Spring Boot project: a REST API for a book collection, backed by PostgreSQL, with AI tool calling capabilities and a chat endpoint that can search, retrieve, add, and update books by calling Java tools.
+My first Spring Boot project: a REST API for a book collection, backed by PostgreSQL, with AI tool calling capabilities and a chat endpoint that can search, retrieve, add, update, and delete books by calling Java tools.
 
 I built this as an introduction to Spring Boot. It covers REST controllers, Spring Data JPA, connecting an API to a real database, and letting an LLM use the API through tool calling.
 
@@ -31,6 +31,7 @@ I built this as an introduction to Spring Boot. It covers REST controllers, Spri
 | POST | `/books` | Add a new book (the database assigns the id) |
 | POST | `/books/bulk` | Add multiple books |
 | PUT | `/books/{id}` | Replace a book's title, author, and price; returns 404 when the id does not exist |
+| DELETE | `/books/{id}` | Delete a book by id |
 
 ### Other
 
@@ -50,6 +51,8 @@ curl -X POST http://localhost:8080/books \
 curl -X PUT http://localhost:8080/books/1 \
   -H "Content-Type: application/json" \
   -d '{"title":"Updated title","author":"Ama Boateng","price":19.50}'
+
+curl -i -X DELETE http://localhost:8080/books/1
 ```
 
 The PUT handler replaces all three fields; omitted fields are overwritten with `null` or `0`. If the id does not exist, it returns HTTP 404.
@@ -69,10 +72,13 @@ The PUT handler replaces all three fields; omitted fields are overwritten with `
 | `addBook` | `POST /books` | Add one book |
 | `addBulk` | `POST /books/bulk` | Add multiple books |
 | `updateBook` | `PUT /books/{id}` | Update a book by id |
+| `deleteBook` | `DELETE /books/{id}` | Delete a book by id |
 
 The `getBookById` and `updateBook` tools throw `IllegalArgumentException` when the book id is missing. Tool calls are not HTTP requests, so these exceptions do not represent HTTP status codes.
 
 `getCheapestBook` and `getMostExpensive` return a `BookToolResult` containing a `book` and a `message`. When no matching book exists, `book` is `null` and the message says no book was found.
+
+The `deleteBook` tool deletes the supplied id. Its description asks the model to get human approval, but this is guidance to the model and is not enforced by the application.
 
 
 ### AI chat
@@ -116,7 +122,7 @@ src/main/java/com/prince/api_app/
 ├── ApiAppApplication.java   # app entry point
 ├── Book.java                # @Entity, maps to the "book" table
 ├── BookRepository.java      # Spring Data JPA repository
-├── BookController.java      # REST endpoints under /books
+├── BookController.java      # REST endpoints under /books, including DELETE
 ├── BookTools.java           # @Tool methods the AI can call
 ├── BookToolResult.java      # result returned by the cheapest/most expensive tools
 ├── ChatController.java      # /chat endpoint
@@ -190,8 +196,8 @@ The API is then at `http://localhost:8080`. Hibernate creates or updates the `bo
 - [x] `POST /books`
 - [x] `POST /books/bulk`
 - [x] `PUT /books/{id}`
+- [x] `DELETE /books/{id}`
 - [x] AI chat endpoint with tool calling
-- [ ] `DELETE /books/{id}`
 - [ ] Validation (`@Valid`) and proper 404 and 400 responses
 - [ ] Move logic into a `BookService`
 - [ ] Prevent duplicate books
