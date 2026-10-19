@@ -100,6 +100,12 @@ public class BookController {
                 
         }
 
+        @DeleteMapping("/{id}")
+        public void deleteBook(@PathVariable int id){
+              bookRepository.deleteById(id);
+        }
+
+
 
 
 }

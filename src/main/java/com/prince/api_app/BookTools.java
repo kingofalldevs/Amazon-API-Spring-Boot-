@@ -96,8 +96,13 @@ public class BookTools {
         existingBook.setAuthor(book.getAuthor());
         existingBook.setPrice(book.getPrice());
         return bookRepository.save(existingBook);
-        
 
+    }
+
+    @Tool(description = "Use this tool to delete record. Use this tool carefully as it is dangerous make sure a human approves")
+    public void deleteBook(int id){
+        System.out.println("TOOL CALLED : deleteBook("+id+")");
+        bookRepository.deleteById(id);
     }
 
 
