@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}"
+      lang="en">
+<head>
+    <title>Chat</title>
+</head>
+<body>
+
+<main layout:fragment="content">
+    <section class="chat"
+             th:attr="data-conversation-id=${conversationId}">
+
+        <div class="chat-messages" id="messages" aria-live="polite">
+            <p class="chat-status" id="status">
+                Ask about the weather and what to read, or about the books in the library.
+            </p>
+        </div>
+
+        <form class="chat-form" id="chat-form" autocomplete="off">
+            <label class="visually-hidden" for="message">Message</label>
+            <textarea id="message"
+                      name="message"
+                      rows="2"
+                      placeholder="e.g. What is the weather in Nairobi, and what should I read?"
+                      required></textarea>
+            <button type="submit" id="send">Send</button>
+        </form>
+
+    </section>
+</main>
+
+<th:block layout:fragment="scripts">
+    <script th:src="@{/js/chat.js}" defer></script>
+</th:block>
+
+</body>
+</html>

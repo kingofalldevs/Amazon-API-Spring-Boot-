@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title layout:title-pattern="$CONTENT_TITLE · $LAYOUT_TITLE">Books</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<header class="site-header">
+    <nav>
+        <h1><a th:href="@{/}">Book Chat</a></h1>
+    </nav>
+</header>
+
+<main layout:fragment="content">
+    <p>Default layout content placeholder.</p>
+</main>
+
+<footer class="site-footer">
+    <p>&copy; 2026 Internal Tools</p>
+</footer>
+
+<th:block layout:fragment="scripts"></th:block>
+
+</body>
+</html>
